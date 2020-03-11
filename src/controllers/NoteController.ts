@@ -5,7 +5,7 @@ import { Note } from "../models/Note";
 const router = require('express').Router();
 
 router.post('/note', async (req, res) => {
-    
+    console.log('test');
     const noteService: INoteService = new NoteService();
 
     try {

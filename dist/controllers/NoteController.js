@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const NoteService_1 = require("../services/NoteService");
 const router = require('express').Router();
 router.post('/note', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log('test');
     const noteService = new NoteService_1.NoteService();
     try {
         yield noteService.create(req.body);
