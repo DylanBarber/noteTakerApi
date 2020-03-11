@@ -33,23 +33,14 @@ export class NoteService implements INoteService {
 
         await this.pg.connect();
 
-        // TODO: change to promise not callback to get return value https://github.com/brianc/node-postgres/issues/1269
-
-        this.pg.query('INSERT INTO notes (subject, body, createdAt) VALUES ($1, $2, now()) RETURNING *',
-            [note.subject, note.body], async (err, res) => {
-
-                if (err) throw err;
-
-                await this.pg.end();
-
+        await this.pg
+            .query('INSERT INTO notes (subject, body, createdAt) VALUES ($1, $2, now()) RETURNING *',
+                [note.subject, note.body])
+            .then(res => {
                 result = res.rows[0];
-            })
+            });
 
         return result;
-
-
-
-
     }
 
     get(id?: number): Promise<Note> | Promise<Note[]> {

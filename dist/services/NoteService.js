@@ -14,7 +14,7 @@ class NoteService {
     constructor() {
         // TODO: Move these to env
         this.pg = new pg_1.Client({
-            user: 'root',
+            user: 'postgres',
             host: 'localhost',
             database: 'noteTaker',
             password: 'password',
@@ -34,12 +34,18 @@ class NoteService {
             }
             let result = null;
             yield this.pg.connect();
-            this.pg.query('INSERT INTO `notes` (subject, body, createdAt) VALUES ($1, $2, now())', [note.subject, note.body], (err, res) => __awaiter(this, void 0, void 0, function* () {
-                if (err)
-                    throw err;
-                yield this.pg.end();
+            // TODO: change to promise not callback to get return value https://github.com/brianc/node-postgres/issues/1269
+            // this.pg.query('INSERT INTO notes (subject, body, createdAt) VALUES ($1, $2, now()) RETURNING *',
+            //     [note.subject, note.body], async (err, res) => {
+            //         if (err) throw err;
+            //         await this.pg.end();
+            //         result = res.rows[0];
+            //     })
+            this.pg
+                .query('INSERT INTO notes (subject, body, createdAt) VALUES ($1, $2, now()) RETURNING *', [note.subject, note.body])
+                .then(res => {
                 result = res.rows[0];
-            }));
+            });
             return result;
         });
     }
