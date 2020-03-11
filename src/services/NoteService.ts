@@ -9,7 +9,7 @@ class NoteService implements INoteService {
     private pg = new Client({
         user: 'root',
         host: 'localhost',
-        database: 'noteTakerDb',
+        database: 'noteTaker',
         password: 'password',
         port: 3211,
     })

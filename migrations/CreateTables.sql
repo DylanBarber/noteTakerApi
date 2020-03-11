@@ -1,0 +1,1 @@
+CREATE TABLE notes (id INT PRIMARY KEY, subject VARCHAR(255) NOT NULL, body VARCHAR(255) NOT NULL, createdAt DATE NOT NULL, lastModified DATE);
