@@ -3,7 +3,7 @@ import { Note } from "../models/Note";
 import { Client } from "pg";
 
 
-class NoteService implements INoteService {
+export class NoteService implements INoteService {
 
     // TODO: Move these to env
     private pg = new Client({
@@ -11,7 +11,7 @@ class NoteService implements INoteService {
         host: 'localhost',
         database: 'noteTaker',
         password: 'password',
-        port: 3211,
+        port: 5432,
     })
 
     async create(note: Note): Promise<Note> {
