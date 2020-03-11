@@ -7,7 +7,7 @@ export class NoteService implements INoteService {
 
     // TODO: Move these to env
     private pg = new Client({
-        user: 'root',
+        user: 'postgres',
         host: 'localhost',
         database: 'noteTaker',
         password: 'password',
@@ -33,7 +33,9 @@ export class NoteService implements INoteService {
 
         await this.pg.connect();
 
-        this.pg.query('INSERT INTO `notes` (subject, body, createdAt) VALUES ($1, $2, now())',
+        // TODO: change to promise not callback to get return value https://github.com/brianc/node-postgres/issues/1269
+
+        this.pg.query('INSERT INTO notes (subject, body, createdAt) VALUES ($1, $2, now()) RETURNING *',
             [note.subject, note.body], async (err, res) => {
 
                 if (err) throw err;

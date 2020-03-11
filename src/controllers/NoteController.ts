@@ -1,16 +1,15 @@
 import { INoteService } from "../services/INoteService";
 import { NoteService } from "../services/NoteService";
-import { Note } from "../models/Note";
 
 const router = require('express').Router();
 
 router.post('/note', async (req, res) => {
-    console.log('test');
+
     const noteService: INoteService = new NoteService();
 
     try {
 
-        await noteService.create(req.body);
+        res.json(await noteService.create(req.body));
 
     } catch (err) {
 
