@@ -24,22 +24,39 @@ router.post('/note', async (req, res) => {
     }
 })
 
-router.get('/note', (req, res) => {
+router.get('/note', async (req, res) => {
 
-    // THIS IS WHERE CALL TO GET ON SERVICE WILL BE
-    res.end();
+    const noteService: INoteService = new NoteService();
+
+    res.json(await noteService.get());
 })
 
-router.put('/note', (req, res) => {
+router.put('/note', async (req, res) => {
 
-    // THIS IS WHERE CALL TO UPDATE NOTE ON SERVICE WILL BE
-    res.end();
+    const noteService: INoteService = new NoteService();
+
+    try {
+
+        res.json(await noteService.update(req.body));
+
+    } catch (err) {
+
+        if (err.message === 'Id must be supplied on update') {
+
+            res.sendStatus(400);
+        } else {
+
+            res.sendStatus(500);
+        }
+
+    }
 })
 
-router.delete('/note', (req, res) => {
+router.delete('/note', async (req, res) => {
 
-    // THIS IS WHERE CALL TO DELETE NOTE ON SERVICE WILL BE
-    res.end();
+    const noteService: INoteService = new NoteService();
+
+    res.json(await noteService.delete(req.body.id));
 })
 
 module.exports = router;

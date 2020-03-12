@@ -14,7 +14,7 @@ export class NoteService implements INoteService {
         port: 5432,
     })
 
-    async create(note: Note): Promise<Note> {
+    public async create(note: Note): Promise<Note> {
 
         if (typeof note.id !== 'undefined' && note.id !== null) {
             throw new Error('Id cannot be supplied on create');
@@ -43,15 +43,45 @@ export class NoteService implements INoteService {
         return result;
     }
 
-    get(id?: number): Promise<Note> | Promise<Note[]> {
-        throw new Error("Method not implemented.");
+    public async get(): Promise<Note[]> {
+        
+        let result = null;
+
+        await this.pg.connect();
+
+        await this.pg
+            .query('SELECT * FROM notes')
+            .then(res => {
+                result = res.rows;
+            });
+
+        return result;
     }
 
-    update(note: Note): Promise<Note> {
-        throw new Error("Method not implemented.");
+    public async update(note: Note): Promise<Note> {
+
+        if (typeof note.id === 'undefined' || note.id === null) {
+            throw new Error('Id must be supplied on update');
+        }
+
+        let result = null;
+
+        await this.pg.connect();
+
+        await this.pg
+            .query('UPDATE notes SET subject = $1, body = $2, lastModified = now() WHERE id = $3 RETURNING *', 
+            [note.subject, note.body, note.id])
+            .then(res => {
+                result = res.rows[0];
+            });
+
+        return result;
     }
 
-    delete(id: number): Promise<void> {
-        throw new Error("Method not implemented.");
+    public async delete(id: number): Promise<void> {
+        
+        await this.pg.connect();
+
+        await this.pg.query('DELETE FROM notes WHERE id = $1', [id]);
     }
 }
